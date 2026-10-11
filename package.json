@@ -11,7 +11,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "check": "tsc --noEmit && node tests/streaks.mjs && node tests/hosting.mjs"
+    "check": "tsc --noEmit && node tests/streaks.mjs && node tests/hosting.mjs && node tests/community.mjs"
   },
   "dependencies": {
     "react": "19.2.6",

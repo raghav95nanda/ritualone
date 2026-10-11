@@ -1,7 +1,8 @@
 # Ritual One
 
 Reading, meditation and exercise. A playful habit app with Supabase accounts,
-private reflections, daily check-ins and per-category longest-streak leaderboards.
+private reflections, daily check-ins, weekly champions, a shared community feed,
+exercise achievements, meditation sounds and a sample event board.
 
 Prepared for **https://github.com/raghav95nanda/ritualone**.
 Expected Pages URL: **https://raghav95nanda.github.io/ritualone/**.
@@ -38,13 +39,17 @@ https://supabase.com/dashboard/project/rslxrwaqvjnxrufarfok
    `supabase/ritual-one-setup.sql`. This creates the app's namespaced tables,
    profile trigger, ownership policies and aggregate leaderboard function.
    Keep existing project data. Do not recreate the project for GitHub Pages.
-2. In **Authentication > URL Configuration > Redirect URLs**, add exactly:
+2. Run `supabase/ritual-one-community-update.sql` in **SQL Editor**. This adds
+   public posts, cheers, pagination and weekly rankings. It preserves existing
+   profiles, check-ins and private reflections. Run it even if the base setup
+   was applied before this update.
+3. In **Authentication > URL Configuration > Redirect URLs**, add exactly:
    `https://raghav95nanda.github.io/ritualone/`
-3. Keep existing redirect entries, including the current ChatGPT-hosted site if
+4. Keep existing redirect entries, including the current ChatGPT-hosted site if
    you still use it. If this project serves other apps, preserve its current
    **Site URL**. If Ritual One is its only app, the Site URL can be the Pages URL.
-4. Keep email/password signups available and keep email confirmation enabled.
-5. If you have customized confirmation/reset email templates, links should use
+5. Keep email/password signups available and keep email confirmation enabled.
+6. If you have customized confirmation/reset email templates, links should use
    `{{ .ConfirmationURL }}` so Supabase verifies them and redirects to the
    full `/ritualone/` address supplied by this app. A direct `/auth/confirm`
    frontend route is not part of this static app.
@@ -55,6 +60,29 @@ key is included. Existing RLS policies protect private records. Every check-in
 and reflection remains in the same Supabase project, so existing member data
 is retained. Members will need to sign in on the new domain because browser
 sessions are stored separately for each domain.
+
+## Community, weekly leaders and events
+
+- **Community:** members deliberately publish book titles, authors, reading thoughts,
+  exercise achievements and calm moments. Other members can cheer posts; each member
+  can cheer once per post and remove their cheer. Members can remove their own posts.
+  Posts are public, with the display name captured at publication time. Private
+  reflections are never copied into posts. The feed loads 20 updates at a time.
+- **Weekly leaders:** each ritual has its own ranking. Weeks run Monday–Sunday in
+  Asia/Kolkata (IST), resetting automatically at Monday midnight. Consecutive days
+  **within the week** rank first, then total completed days, then the earliest first
+  check-in and a stable ID. Last week's top member appears as the champion. Opt-outs
+  apply to both weekly and all-time rankings; no cron job is needed. Weekly rankings
+  use the existing check-in calendar dates and exclude dates beyond the current IST day.
+- **Meditation:** choose silence, soft rain or forest ambience and adjust the volume.
+  Sound follows timer pause/resume and stops after ten minutes or when the session
+  ends. MP3 recordings ship in `public/sounds/`, including public-domain credits.
+- **Events:** the three requested meetups are explicitly marked as samples, with
+  future weekend dates, IST times, fictional locations, browser-local interest
+  toggles and downloadable sample calendar reminders. They are not real bookings.
+- Signed-out visitors see clearly marked example community posts when there are
+  no live updates. Example cheers stay in memory. Account holders see real posts
+  or a service/empty state, never fabricated member activity.
 
 ## Future edits
 
@@ -98,9 +126,12 @@ redirects use this same base automatically.
 ## Checks and limitations
 
 The package was checked with TypeScript, the production Vite build, existing
-streak tests, and base-path/asset/auth-redirect tests. Visual browser QA and
+streak, week-rollover and event-calendar tests, base-path/asset/auth-redirect tests,
+and disposable PostgreSQL tests of the new migration, RLS, posts, cheers, feed
+pagination and weekly rankings. Visual browser QA and
 live email confirmation/password recovery were not available in this session.
-After deployment, test signup, confirmation, a saved check-in and password reset.
+After applying both SQL files and deploying, test signup, confirmation, a saved
+check-in, password reset, a public post and a cheer using two accounts.
 Timers need the page to remain open; an unsaved session ends on reload.
 
 ## References
