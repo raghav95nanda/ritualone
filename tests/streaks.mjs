@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {streaks,shiftDay,dateKey} from '../src/lib/rituals.ts';
+const log=(d,c='reading')=>({category:c,completed_on:d,minutes:20,pages:null,reflection:''});
+assert.deepEqual(streaks([], 'reading','2026-10-11'),{current:0,best:0,total:0});
+assert.deepEqual(streaks(['2026-10-08','2026-10-09','2026-10-10'].map(d=>log(d)), 'reading','2026-10-11'),{current:3,best:3,total:3});
+assert.deepEqual(streaks(['2026-10-08','2026-10-09','2026-10-10','2026-10-11','2026-10-11'].map(d=>log(d)), 'reading','2026-10-11'),{current:4,best:4,total:4});
+assert.deepEqual(streaks(['2026-10-01','2026-10-02','2026-10-03','2026-10-05'].map(d=>log(d)), 'reading','2026-10-11'),{current:0,best:3,total:4});
+assert.equal(streaks([log('2026-10-10'),log('2026-10-11','exercise')],'reading','2026-10-11').current,1);
+assert.equal(shiftDay('2027-01-01',-1),'2026-12-31');
+assert.equal(shiftDay('2028-03-01',-1),'2028-02-29');
+assert.equal(dateKey(new Date('2026-10-10T23:59:00Z'),'Asia/Kolkata'),'2026-10-11');
+console.log('Streak, duplicate-date, category, gap, leap-year and timezone checks passed.');
