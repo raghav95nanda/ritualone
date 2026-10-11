@@ -1,0 +1,7 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+*.tsbuildinfo
+.DS_Store
+# docs/ stays tracked for GitHub Pages branch deployment.

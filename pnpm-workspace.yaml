@@ -1,0 +1,4 @@
+# Only the build tools in this locked dependency graph may run install scripts.
+allowBuilds:
+  esbuild@0.28.0: true
+  fsevents@2.3.3: true
